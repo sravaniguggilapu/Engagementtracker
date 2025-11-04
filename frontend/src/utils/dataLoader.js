@@ -1,23 +1,15 @@
-import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 
 export const loadStudentData = async () => {
   try {
-    const response = await fetch('/data/combined_dataset.csv');
-    const csvText = await response.text();
+    const response = await fetch('/data/combined_dataset.xlsx');
+    const arrayBuffer = await response.arrayBuffer();
+    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+    const firstSheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[firstSheetName];
+    const data = XLSX.utils.sheet_to_json(worksheet);
     
-    return new Promise((resolve, reject) => {
-      Papa.parse(csvText, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          resolve(results.data);
-        },
-        error: (error) => {
-          reject(error);
-        }
-      });
-    });
+    return data;
   } catch (error) {
     console.error('Error loading student data:', error);
     return [];
