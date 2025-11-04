@@ -143,8 +143,8 @@ export const Students = () => {
                       <span className="text-sm text-muted-foreground">{selectedStudent.Trend}</span>
                     </div>
                   </div>
-                  <Progress value={(selectedStudent.Total_Activity_Score / 30) * 100} className="h-3" />
-                  <p className="text-sm text-muted-foreground">Out of 30 possible points</p>
+                  <Progress value={(selectedStudent.Total_Activity_Score / 27) * 100} className="h-3" />
+                  <p className="text-sm text-muted-foreground">Out of 27 maximum points</p>
                 </div>
               </Card>
               
