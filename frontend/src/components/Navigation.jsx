@@ -1,8 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, AlertTriangle, MessageSquare, Info } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home, Users, AlertTriangle, MessageSquare, Info, LogOut, User } from 'lucide-react';
+import { Button } from './ui/button';
+import { toast } from 'sonner';
 
 export const Navigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const userEmail = localStorage.getItem('userEmail');
   
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
@@ -11,6 +15,13 @@ export const Navigation = () => {
     { path: '/feedback', label: 'Feedback', icon: MessageSquare },
     { path: '/about', label: 'About', icon: Info }
   ];
+  
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userEmail');
+    toast.success('Logged out successfully');
+    navigate('/auth');
+  };
   
   return (
     <nav className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
@@ -47,7 +58,23 @@ export const Navigation = () => {
             })}
           </div>
           
-          <div className="md:hidden">
+          <div className="hidden md:flex items-center space-x-3">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <User className="w-4 h-4" />
+              <span className="hidden lg:inline">{userEmail}</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center space-x-2"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </Button>
+          </div>
+          
+          <div className="md:hidden flex items-center space-x-2">
             <select
               value={location.pathname}
               onChange={(e) => window.location.href = e.target.value}
@@ -59,6 +86,13 @@ export const Navigation = () => {
                 </option>
               ))}
             </select>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>
